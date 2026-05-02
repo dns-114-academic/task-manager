@@ -1,0 +1,27 @@
+@startuml D3_SequenceCollaboration
+
+actor "Utilisateur A" as userA
+actor "Utilisateur B" as userB
+participant "TaskManagerGUI" as gui
+participant "TaskListImpl\n(liste partagée)" as list
+participant "NotificationEngine" as notif
+
+userA -> gui : Sélectionne une tâche partagée
+userA -> gui : Modifie les champs, clique "Modifier"
+
+gui -> list : update(oldName, updatedTask, "UserA")
+note right of list : updatedTask.lastModifiedBy = "UserA"\nLa tâche est mise à jour dans la liste
+
+gui -> gui : refreshTable()
+gui --> userA : Affiche la liste mise à jour
+
+note over notif : Le Timer Swing (30 s) déclenche\nune vérification automatique
+
+notif -> list : checkNotifications(list, "UserB")
+note right of notif : Pour chaque tâche :\nsi lastModifiedBy != "UserB"\n→ notification générée
+
+notif --> gui : "[COLLABORATION] \"Tâche X\" modifiée par UserA"
+
+gui --> userB : Affiche la notification\ndans le panneau Messages/Notifications
+
+@enduml

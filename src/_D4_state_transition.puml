@@ -1,0 +1,19 @@
+@startuml D4_StateTransition
+
+[*] --> TODO : Création de la tâche
+
+TODO --> IN_PROGRESS : Démarrer
+TODO --> ABANDONED   : Abandonner
+
+IN_PROGRESS --> COMPLETED   : Terminer
+IN_PROGRESS --> TODO        : Remettre en attente
+IN_PROGRESS --> ABANDONED   : Abandonner
+
+COMPLETED --> IN_PROGRESS : Rouvrir
+
+ABANDONED --> TODO : Réactiver
+
+COMPLETED --> [*]
+ABANDONED --> [*]
+
+@enduml

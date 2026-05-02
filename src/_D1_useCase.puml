@@ -1,0 +1,69 @@
+@startuml D1_UseCase_Updated
+
+left to right direction
+
+actor "Utilisateur" as user
+
+rectangle "Gestionnaire de Tâches" {
+    usecase "S'inscrire" as UC_REGISTER
+    usecase "Se connecter (login)" as UC_LOGIN
+    usecase "Se déconnecter (logout)" as UC_LOGOUT
+
+    usecase "Créer une tâche" as UC1
+    usecase "Voir la liste des tâches" as UC2
+    usecase "Modifier une tâche" as UC3
+    usecase "Supprimer une tâche" as UC4
+    usecase "Changer le statut" as UC5
+    usecase "Filtrer par statut" as UC6
+    usecase "Filtrer par priorité" as UC7
+    usecase "Trier par date" as UC8
+    usecase "Trier par priorité" as UC9
+    usecase "Rechercher par mot-clé" as UC10
+    usecase "Ajouter un commentaire" as UC11
+    usecase "Exporter en JSON" as UC12
+    usecase "Importer depuis JSON" as UC13
+    usecase "Partager une liste" as UC_SHARE
+    usecase "Voir les statistiques" as UC_STATS
+    usecase "Recevoir une notification" as UC_NOTIF
+}
+
+user --> UC_REGISTER
+user --> UC_LOGIN
+user --> UC_LOGOUT
+
+user --> UC1
+user --> UC2
+user --> UC3
+user --> UC4
+user --> UC5
+user --> UC6
+user --> UC7
+user --> UC8
+user --> UC9
+user --> UC10
+user --> UC11
+user --> UC12
+user --> UC13
+user --> UC_SHARE
+user --> UC_STATS
+user --> UC_NOTIF
+
+' Toutes les actions protégées nécessitent d'être connecté
+UC1  ..> UC_LOGIN : <<include>>
+UC2  ..> UC_LOGIN : <<include>>
+UC3  ..> UC_LOGIN : <<include>>
+UC4  ..> UC_LOGIN : <<include>>
+UC5  ..> UC_LOGIN : <<include>>
+UC6  ..> UC_LOGIN : <<include>>
+UC7  ..> UC_LOGIN : <<include>>
+UC8  ..> UC_LOGIN : <<include>>
+UC9  ..> UC_LOGIN : <<include>>
+UC10 ..> UC_LOGIN : <<include>>
+UC11 ..> UC_LOGIN : <<include>>
+UC12 ..> UC_LOGIN : <<include>>
+UC13 ..> UC_LOGIN : <<include>>
+UC_SHARE ..> UC_LOGIN : <<include>>
+UC_STATS ..> UC_LOGIN : <<include>>
+UC_NOTIF ..> UC_LOGIN : <<include>>
+
+@enduml

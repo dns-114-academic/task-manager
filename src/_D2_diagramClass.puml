@@ -1,0 +1,134 @@
+@startuml D2_ClassDiagram_Updated
+
+enum Status {
+    TODO
+    IN_PROGRESS
+    COMPLETED
+    ABANDONED
+}
+
+enum Priority {
+    LOW
+    MEDIUM
+    HIGH
+}
+
+interface Task {
+    + edit(name: String, description: String, dueDate: String, status: Status, priority: Priority): void
+    + delete(): void
+    + setStatus(status: Status): void
+}
+
+class TaskImpl implements Task {
+    - name: String
+    - description: String
+    - dueDate: String
+    - status: Status
+    - priority: Priority
+    - comments: ArrayList<String>
+    - isShared: boolean
+    - isRecurring: boolean
+    - recurringInterval: String
+    - lastModifiedBy: String
+    + TaskImpl(name, description, dueDate, status, priority)
+    + edit(...): void
+    + delete(): void
+    + setStatus(status: Status): void
+    + addComment(comment: String): void
+    + getName(): String
+    + getDescription(): String
+    + getDueDate(): String
+    + getStatus(): Status
+    + getPriority(): Priority
+    + getComments(): ArrayList<String>
+    + isShared(): boolean
+    + setShared(shared: boolean): void
+    + isRecurring(): boolean
+    + setRecurring(recurring: boolean): void
+    + getRecurringInterval(): String
+    + setRecurringInterval(interval: String): void
+    + getLastModifiedBy(): String
+    + setLastModifiedBy(username: String): void
+    + toString(): String
+}
+
+abstract class TaskList {
+    + {abstract} add(t: TaskImpl): void
+    + {abstract} remove(name: String): void
+    + {abstract} update(name: String, t: TaskImpl, modifiedBy: String): void
+    + {abstract} display(): void
+}
+
+class TaskListImpl extends TaskList {
+    - tasks: ArrayList<TaskImpl>
+    + add(t: TaskImpl): void
+    + remove(name: String): void
+    + update(name: String, t: TaskImpl, modifiedBy: String): void
+    + display(): void
+    + filterByStatus(status: Status): ArrayList<TaskImpl>
+    + filterByPriority(priority: Priority): ArrayList<TaskImpl>
+    + sortByDueDate(): void
+    + sortByPriority(): void
+    + search(keyword: String): ArrayList<TaskImpl>
+    + addComment(taskName: String, comment: String): void
+    + validateInput(name: String, description: String): boolean
+    + getStats(): String
+    + exportToJson(filename: String): void
+    + importFromJson(filename: String): void
+    + getTasks(): ArrayList<TaskImpl>
+}
+
+class User {
+    - username: String
+    - password: String
+    - privateTasks: TaskListImpl
+    - sharedLists: ArrayList<TaskListImpl>
+    + User(username: String, password: String)
+    + getUsername(): String
+    + getPassword(): String
+    + getPrivateTasks(): TaskListImpl
+    + getSharedLists(): ArrayList<TaskListImpl>
+    + addSharedList(list: TaskListImpl): void
+}
+
+class AuthManager {
+    - users: ArrayList<User>
+    - loggedUser: User
+    + register(username: String, password: String): boolean
+    + login(username: String, password: String): boolean
+    + logout(): void
+    + getLoggedUser(): User
+    + isLoggedIn(): boolean
+    + findUser(username: String): User
+    + getUsers(): ArrayList<User>
+}
+
+class NotificationEngine {
+    - notifications: ArrayList<String>
+    + checkNotifications(list: TaskListImpl, currentUser: String): ArrayList<String>
+    + getNotifications(): ArrayList<String>
+    + clearNotifications(): void
+}
+
+class TaskManagerGUI {
+    - frame: JFrame
+    - taskListImpl: TaskListImpl
+    - authManager: AuthManager
+    - notificationEngine: NotificationEngine
+    + TaskManagerGUI()
+    + refreshTable(): void
+    - checkAndDisplayNotifications(): void
+}
+
+TaskImpl ..> Status   : "utilise"
+TaskImpl ..> Priority : "utilise"
+TaskListImpl o-- "0..*" TaskImpl : "contient"
+User --> "1"    TaskListImpl : "privateTasks"
+User --> "0..*" TaskListImpl : "sharedLists"
+AuthManager o-- "0..*" User : "gère"
+NotificationEngine ..> TaskListImpl : "analyse"
+TaskManagerGUI --> "1" TaskListImpl      : "utilise"
+TaskManagerGUI --> "1" AuthManager       : "utilise"
+TaskManagerGUI --> "1" NotificationEngine : "utilise"
+
+@enduml
